@@ -6,7 +6,7 @@ const mongoose=require('mongoose')
 
 // import eventRouter from "./routes/event_routes.js";
 // import router from "./routes/user_routes.js";
-import cors from "cors";
+const cors=require('cors')
 
 // dotenv.config();
 const app = express();
