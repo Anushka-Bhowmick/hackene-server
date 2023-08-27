@@ -5,17 +5,17 @@ import User from "../model/User.js";
 
 
 export const getAllEvents = async (req, res, next) => {
-  let blogs;
+  let events;
 
   try {
-    blogs = await Blog.find().populate("user");
+    events = await Blog.find().populate("user");
   } catch (error) {
     console.log(error);
   }
-  if (!blogs) {
+  if (!events) {
     return res.status(404).json({ message: "No Blog Found!" });
   }
-  return res.status(200).json({ blogs });
+  return res.status(200).json({ events });
 };
 
 
@@ -29,6 +29,7 @@ export const addEvent = async (req, res, next) => {
   let existingUser;
   try {
     existingUser = await User.findById(user);
+    // console.log(existingUser)
   } catch (error) {
     return console.log(error);
   }
@@ -42,19 +43,25 @@ export const addEvent = async (req, res, next) => {
     image,
     user,
   });
+
+
   try {
     const session = await mongoose.startSession();
 
     session.startTransaction();
     await blog.save({ session });
-    existingUser.blogs.push(blog);
+    existingUser.events.push(blog);
     await existingUser.save({ session });
     await session.commitTransaction();
     await session.endSession();
   } catch (error) {
+
     console.log(error);
     return res.status(500).json({ message: error });
+
+
   }
+
   return res.status(200).json({ blog });
 };
 
@@ -114,6 +121,7 @@ export const deleteEvent = async (req, res, next) => {
   let blog;
   try {
     blog = await Blog.findByIdAndRemove(req.params.id).populate("user");
+    console.log(blog)
     await blog.user.blogs.pull(blog);
     await blog.user.save();
   } catch (err) {
@@ -134,7 +142,7 @@ export const deleteEvent = async (req, res, next) => {
 export const getUserById = async (req, res, next) => {
   let userBlogs;
   try {
-    userBlogs = await User.findById(req.params.id).populate("blogs");
+    userBlogs = await User.findById(req.params.id).populate("events");
   } catch (error) {
     console.log(error);
   }
