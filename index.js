@@ -1,6 +1,9 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+
+
+const express=require('express')
+const dotenv=require('dotenv')
+const mongoose=require('mongoose')
+
 // import eventRouter from "./routes/event_routes.js";
 // import router from "./routes/user_routes.js";
 import cors from "cors";
